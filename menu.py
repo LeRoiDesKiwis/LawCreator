@@ -1,6 +1,6 @@
 def print_menu(choices):
     for i, choice in enumerate(choices):
-        print(i, choice)
+        print(i+1, choice)
 
 def menu(choices):
     print_menu(choices)
@@ -8,7 +8,7 @@ def menu(choices):
     return choice-1
 
 # dictionary of choices with the function to call as value
-def menu_functions(choices, **kwargs):
+def menu_functions(choices):
     print_menu(list(choices.keys()))
     choice = int(input("Enter your choice: "))
-    return list(choices.values())[choice-1](kwargs)
+    return list(choices.values())[choice-1]()

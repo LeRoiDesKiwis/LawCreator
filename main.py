@@ -1,13 +1,9 @@
-import laws
+import laws as l
 import menu
 import database
 import tokens
 
-database = database.Database('localhost', tokens.user, tokens.password, 'Laws')
-
-def exit(laws):
-    laws.save(laws)
-    quit()
+db = database.Database('localhost', tokens.user, tokens.password, 'laws')
 
 def add_section(laws):
     title = input("Enter the title of the section: ")
@@ -21,26 +17,33 @@ def add_alinea(laws):
     text = input("Enter the text of the alinea: ")
     laws.add_alinea(laws.Alinea(text))
     
-laws = laws.load()
+laws = l.load(db)
 
-current = None
+def save():
+    l.save(laws, db)
+
+def exit1():
+    save()
+    exit(0)
+
+current = laws
 
 while True:
     choices = {
-        "Save": laws.save,
-        "Exit": exit
+        "Save": save,
+        "Exit": exit1
     }
-    choices = [thing.title for thing in current]
-    index = menu.menu(choices)
-    while index > len(choices) or index <= 0:
+    choices2 = [thing.title for thing in current]
+    index = menu.menu(choices2)
+    while index >= len(choices) or index < 0:
         print("Invalid choice")
-        index = menu.menu(choices)
+        index = menu.menu(choices2)
     
-    
-    if type(current) == laws.Law:
-        choices["Add section"] = add_section
-    elif type(current) == laws.Section:
-        choices["Add article"] = add_article
-    elif type(current) == laws.Article:
-        choices["Add alinea"] = add_alinea
-    menu.menu_functions(choices, laws=laws)
+    if type(current) == list:
+        current = laws[index]
+    elif type(current) == l.Law:
+        current = current.sections[index]
+    elif type(current) == l.Section:
+        current = current.articles[index]
+    elif type(current) == l.Article:
+        current = current.alineas[index]

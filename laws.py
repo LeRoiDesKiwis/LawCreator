@@ -3,19 +3,19 @@ import database
 def load(db):
     # load the laws from the database
     laws = []
-    for law in db.query("SELECT * FROM laws"):
+    for law in db.query("SELECT * FROM Laws"):
         law_id = law[0]
         law_title = law[1]
         sections = []
-        for section in db.query("SELECT * FROM sections WHERE LawID = %s", (law_id,)):
+        for section in db.query("SELECT * FROM Section WHERE LawID = %s", (law_id,)):
             section_id = section[0]
             section_title = section[2]
             articles = []
-            for article in db.query("SELECT * FROM articles WHERE SectionID = %s", (section_id,)):
+            for article in db.query("SELECT * FROM Article WHERE SectionID = %s", (section_id,)):
                 article_id = article[0]
                 article_title = article[2]
                 alineas = []
-                for alinea in db.query("SELECT * FROM alineas WHERE ArticleID = %s", (article_id,)):
+                for alinea in db.query("SELECT * FROM Alinea WHERE ArticleID = %s", (article_id,)):
                     alinea_id = alinea[0]
                     alinea_text = alinea[2]
                     alineas.append(Alinea(alinea_text))

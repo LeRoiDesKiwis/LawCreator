@@ -12,12 +12,12 @@ class Database:
             password=self.password,
             database=self.database
         )
-        self.cursor = self.connection.cursor()
 
     def query(self, query, params=None):
-        self.cursor.execute(query, params)
+        cursor = self.connection.cursor(buffered=True)
+        cursor.execute(query, params)
         self.connection.commit()
-        return self.cursor
+        return cursor
 
     def __del__(self):
         self.connection.close()
