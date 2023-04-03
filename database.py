@@ -19,6 +19,3 @@ class Database:
         self.connection.commit()
         return cursor
 
-    def __del__(self):
-        self.connection.close()
-

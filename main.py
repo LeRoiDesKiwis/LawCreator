@@ -3,7 +3,11 @@ import menu
 import database
 import tokens
 
-db = database.Database('localhost', tokens.user, tokens.password, 'laws')
+db = database.Database(tokens.ip, tokens.user, tokens.password, 'laws')
+
+def exit(laws):
+    laws.save(laws)
+    quit()
 
 def add_section(laws):
     title = input("Enter the title of the section: ")
