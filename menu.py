@@ -5,7 +5,7 @@ def print_menu(choices):
 def menu(choices):
     print_menu(choices)
     choice = int(input("Enter your choice: "))
-    return choice-1
+    return choice-1, choices[choice-1]
 
 # dictionary of choices with the function to call as value
 def menu_functions(choices):

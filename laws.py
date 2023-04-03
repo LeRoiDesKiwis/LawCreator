@@ -16,7 +16,6 @@ def load(db):
                 article_title = article[2]
                 alineas = []
                 for alinea in db.query("SELECT * FROM Alinea WHERE ArticleID = %s", (article_id,)):
-                    alinea_id = alinea[0]
                     alinea_text = alinea[2]
                     alineas.append(Alinea(alinea_text))
                 articles.append(Article(article_title, alineas))
@@ -38,14 +37,19 @@ def save(laws, db):
 class Alinea:
     def __init__(self, title):
         self.title = title
+        self.parent = None
 
     def __str__(self):
-        return " "*6+self.title
+        return self.title
+
+    def __iter__(self):
+        return iter([])
 
 class Article:
     def __init__(self, title, alineas=[]):
         self.title = title
         self.alineas = alineas
+        self.parent = None
     
     def add_alinea(self, alinea):
         self.alineas.append(alinea)
@@ -55,7 +59,7 @@ class Article:
         temp = ""
         for i in range(len(self.alineas)):
             alinea = self.alineas[i]
-            temp += f"    {i+1}.{alinea}\n"
+            temp += f"    {i+1}. {alinea}\n"
         return self.title + "\n" + temp
 
     def __iter__(self):
@@ -65,6 +69,7 @@ class Section:
     def __init__(self, title, articles=[]):
         self.title = title
         self.articles = articles
+        self.parent = None
 
     def add_article(self, article):
         self.articles.append(article)

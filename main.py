@@ -27,19 +27,24 @@ def exit1():
     exit(0)
 
 current = laws
+previous = None
 
 while True:
-    choices = {
-        "Save": save,
-        "Exit": exit1
-    }
-    choices2 = [thing.title for thing in current]
-    index = menu.menu(choices2)
-    while index >= len(choices) or index < 0:
+    choices = [thing.title for thing in current]
+    if(hasattr(current, 'parent')):
+        choices.append("Return")
+    choices.append('Print')
+
+    index, name = menu.menu(choices)
+    while index > len(choices) or index < 0:
         print("Invalid choice")
-        index = menu.menu(choices2)
+        index = menu.menu(choices)
     
-    if type(current) == list:
+    if name == "Return":
+        current = current.parent
+    if name == "Print":
+        print(str(current))
+    elif type(current) == list:
         current = laws[index]
     elif type(current) == l.Law:
         current = current.sections[index]
