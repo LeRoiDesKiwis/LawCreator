@@ -1,5 +1,9 @@
 import laws
 import menu
+import database
+import tokens
+
+database = database.Database('localhost', tokens.user, tokens.password, 'Laws')
 
 def exit(laws):
     laws.save(laws)
@@ -26,7 +30,7 @@ while True:
         "Save": laws.save,
         "Exit": exit
     }
-        choices = [thing.title for thing in current]
+    choices = [thing.title for thing in current]
     index = menu.menu(choices)
     while index > len(choices) or index <= 0:
         print("Invalid choice")
