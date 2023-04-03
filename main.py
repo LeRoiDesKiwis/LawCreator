@@ -3,7 +3,7 @@ import menu
 import database
 import tokens
 
-db = database.Database(tokens.ip, tokens.user, tokens.password, 'laws')
+db = database.Database(tokens.addr, tokens.user, tokens.password, 'laws')
 
 def exit(laws):
     laws.save(laws)
@@ -34,7 +34,9 @@ current = laws
 previous = None
 
 while True:
-    choices = [thing.__class__.__name__+ ' '+thing.title for thing in current]
+    if hasattr(current, 'title'):
+        print(f"\n---- {current.__class__.__name__} {current.title} ----")
+    choices = [thing.title for thing in current]
     if(hasattr(current, 'parent')):
         choices.append("Return")
     choices.append('Print')
