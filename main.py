@@ -34,7 +34,7 @@ current = laws
 previous = None
 
 while True:
-    choices = [thing.title for thing in current]
+    choices = [thing.__class__.__name__+ ' '+thing.title for thing in current]
     if(hasattr(current, 'parent')):
         choices.append("Return")
     choices.append('Print')
