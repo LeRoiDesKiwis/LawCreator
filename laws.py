@@ -17,10 +17,27 @@ def load(db):
                 alineas = []
                 for alinea in db.query("SELECT * FROM Alinea WHERE ArticleID = %s", (article_id,)):
                     alinea_text = alinea[2]
-                    alineas.append(Alinea(alinea_text))
-                articles.append(Article(article_title, alineas))
-            sections.append(Section(section_title, articles))
-        laws.append(Law(law_title, sections))
+                    alinea_obj = Alinea(alinea_text)
+                    alineas.append(alinea_obj)
+                article_obj = Article(article_title, alineas)
+                articles.append(article_obj)
+            section_obj = Section(section_title, articles)
+            sections.append(section_obj)
+        law_obj = Law(law_title, sections)
+
+        # Set parent objects for sections, articles, and alineas
+        for section in law_obj.sections:
+            section.parent = law_obj
+            for article in section.articles:
+                article.parent = section
+                for alinea in article.alineas:
+                    alinea.parent = article
+
+        laws.append(law_obj)
+    
+    for law in laws:
+        law.parent = laws
+
     return laws
 
 def save(laws, db):
@@ -41,6 +58,17 @@ class Alinea:
 
     def __str__(self):
         return self.title
+    
+    def format(self):
+        article = self.parent
+        section = article.parent
+        law = section.parent
+        temp = ""
+        temp+= law.title+"\n"
+        temp+= " "*2+section.title+"\n"
+        temp+= " "*4+article.title+"\n"
+        temp+= " "*6+self.title
+        return temp
 
     def __iter__(self):
         return iter([])
@@ -60,6 +88,7 @@ class Article:
         for i in range(len(self.alineas)):
             alinea = self.alineas[i]
             temp += f"    {i+1}. {alinea}\n"
+        temp = temp[:len(temp)-2]
         return self.title + "\n" + temp
 
     def __iter__(self):
@@ -80,7 +109,7 @@ class Section:
         for i in range(len(self.articles)):
             article = self.articles[i]
             temp += f"  {i+1}. {article}\n"
-        return self.title + "\n" + temp
+        return self.title + "\n"*2 + temp
     
     def __iter__(self):
         return iter(self.articles)
@@ -99,7 +128,7 @@ class Law:
         for i in range(len(self.sections)):
             section = self.sections[i]
             temp += f"{i+1}. {section}\n"
-        return self.title + "\n" + temp
+        return self.title + "\n"*2 + temp
     
     def __iter__(self):
         return iter(self.sections)

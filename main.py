@@ -42,8 +42,12 @@ while True:
     
     if name == "Return":
         current = current.parent
-    if name == "Print":
-        print(str(current))
+    elif name == "Print":
+        if type(current) == list:
+            for law in current:
+                print("\n"+str(law))
+        else:
+            print("\n"+str(current))
     elif type(current) == list:
         current = laws[index]
     elif type(current) == l.Law:
@@ -51,4 +55,4 @@ while True:
     elif type(current) == l.Section:
         current = current.articles[index]
     elif type(current) == l.Article:
-        current = current.alineas[index]
+        print("\n"+(current.alineas[index]).format()+"\n")
